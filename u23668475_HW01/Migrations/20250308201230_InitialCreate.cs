@@ -31,5 +31,6 @@ namespace u23668475_HW01.Migrations
             migrationBuilder.DropTable(
                 name: "Products");
         }
+       
     }
 }

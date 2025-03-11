@@ -40,6 +40,7 @@ namespace u23668475_HW01.Repositories
 
             existingProduct.productName = product.productName;
             existingProduct.productDescription = product.productDescription;
+            existingProduct.productPrice = product.productPrice;
             await _context.SaveChangesAsync();
             return existingProduct;
         }

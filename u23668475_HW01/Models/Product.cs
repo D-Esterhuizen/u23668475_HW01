@@ -14,6 +14,9 @@ namespace u23668475_HW01.Models
         [Required]
         public string productDescription { get; set; }= string.Empty;
 
+        [Required]
+        public int productPrice { get; set; } = 0;
+         
 
 
     }
