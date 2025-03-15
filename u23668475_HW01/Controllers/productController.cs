@@ -2,7 +2,6 @@
 using u23668475_HW01.Models;
 using u23668475_HW01.Repositories;
 
-
 namespace u23668475_HW01.Controllers
 {
     [Route("api/[controller]")]
@@ -11,42 +10,65 @@ namespace u23668475_HW01.Controllers
     {
         private readonly IproductRepository _repository;
 
-
         public productController(IproductRepository repository)
         {
             _repository = repository;
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> getAllProducts()
         {
             return Ok(await _repository.getAllProducts());
         }
 
-        [HttpGet("{prodictId}")]
-        public async Task<ActionResult<Product>> getProduct(int prodictId)
+        [HttpGet("{productId}")]
+        public async Task<ActionResult<Product>> getProduct(int productId)
         {
-            var product = await _repository.getProductsById(prodictId);
+            var product = await _repository.getProductsById(productId);
             return product == null ? NotFound() : Ok(product);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> addProduct(Product product)
+        public async Task<ActionResult<Product>> addProduct([FromBody] Product product)
         {
-            var newProduct = await _repository.addProduct(product);
-            return CreatedAtAction(nameof(getProduct), new { productId = newProduct.productId }, newProduct);
+            if (product == null)
+            {
+                return BadRequest("Product is null.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var newProduct = await _repository.addProduct(product);
+                if (newProduct == null)
+                {
+                    return StatusCode(500, "A problem happened while handling your request. NULL");
+                }
+                return CreatedAtAction(nameof(getProduct), new { productId = newProduct.productId }, newProduct);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex) here
+                return StatusCode(500, "Internal server error");
+            }
         }
-        [HttpPost("{productId}")]
-        public async Task<IActionResult> updateProduct(int productId, Product product)
+
+        [HttpPut("{productId}")]
+        public async Task<IActionResult> UpdateProduct(int productId, Product product)
         {
             if (productId != product.productId) return BadRequest();
-            var updatedProduct = await _repository.updateProduct(product);
+            var updatedProduct = await _repository.UpdateProduct(product);
             return updatedProduct == null ? NotFound() : NoContent();
         }
 
         [HttpDelete("{productId}")]
-        public async Task<IActionResult> DeleteStudent (int productId)
+        public async Task<IActionResult> deleteProduct(int productId)
         {
-            return await _repository.deleteProduct(productId)? NoContent() : NotFound();
+            return await _repository.deleteProduct(productId) ? NoContent() : NotFound();
         }
     }
 }

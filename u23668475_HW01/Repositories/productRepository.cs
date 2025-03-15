@@ -24,16 +24,24 @@ namespace u23668475_HW01.Repositories
             return await _context.Products.FirstOrDefaultAsync(p => p.productId == productID);
         }
 
+        
+
         public async Task<Product> addProduct(Product product)
         {
-            _context.Products.Add(product);
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
+
             return product;
         }
 
 
 
-        public async Task<Product?> updateProduct(Product product)
+        public async Task<Product?> UpdateProduct(Product product)
         {
             var existingProduct = await _context.Products.FindAsync(product.productId);
             if (existingProduct == null) return null;

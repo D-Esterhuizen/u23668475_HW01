@@ -7,9 +7,8 @@ namespace u23668475_HW01.Repositories
         Task<IEnumerable<Product>> getAllProducts();
 
         Task<Product?> getProductsById(int productID);
-
         Task<Product?> addProduct(Product product);
-        Task<Product?> updateProduct(Product product);
+        Task<Product?> UpdateProduct(Product product);
         Task<bool> deleteProduct(int productID);
 
     }
